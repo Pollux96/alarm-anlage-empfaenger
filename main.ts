@@ -1,11 +1,15 @@
 radio.onReceivedNumber(function (receivedNumber) {
     Fernbedienung = receivedNumber
+    I2C_LCD1602.clear()
     I2C_LCD1602.ShowString("Alarm-Anlage", 0, 0)
+    basic.pause(2000)
+    I2C_LCD1602.clear()
     if (receivedNumber == 0) {
-        I2C_LCD1602.ShowString("Aus", 8, 1)
+        I2C_LCD1602.ShowString("Aus", 5, 0)
     } else if (receivedNumber == 1) {
-        I2C_LCD1602.ShowString("Ein", 8, 1)
+        I2C_LCD1602.ShowString("Ein", 5, 0)
     }
+    basic.pause(2000)
 })
 function AlarmAusgelöst () {
     strip.showColor(neopixel.colors(NeoPixelColors.Red))
@@ -31,13 +35,15 @@ radio.setGroup(1)
 I2C_LCD1602.LcdInit(39)
 Fernbedienung = 0
 strip = neopixel.create(DigitalPin.P13, 24, NeoPixelMode.RGB)
-strip.showColor(neopixel.colors(NeoPixelColors.Green))
 strip2 = neopixel.create(DigitalPin.P14, 4, NeoPixelMode.RGB)
+strip.showColor(neopixel.colors(NeoPixelColors.White))
+strip2.showColor(neopixel.colors(NeoPixelColors.White))
 basic.forever(function () {
     if (pins.digitalReadPin(DigitalPin.P16) == 1 && Fernbedienung == 1) {
         AlarmAusgelöst()
+        strip.showColor(neopixel.colors(NeoPixelColors.Green))
+        strip2.showColor(neopixel.colors(NeoPixelColors.Green))
+    } else {
+        I2C_LCD1602.clear()
     }
-    strip.showColor(neopixel.colors(NeoPixelColors.Green))
-    strip2.showColor(neopixel.colors(NeoPixelColors.Green))
-    I2C_LCD1602.clear()
 })
